@@ -1,33 +1,32 @@
--- =========================================
--- RENTEASE - Web Based House Rental System
--- Database: rentease
--- =========================================
+-- RENTEASE Database Structure
 
--- USERS TABLE
-CREATE TABLE IF NOT EXISTS users (
+CREATE DATABASE IF NOT EXISTS rentease;
+USE rentease;
+
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin','owner','tenant') NOT NULL,
+    role ENUM('tenant','owner','admin') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ROOMS TABLE
-CREATE TABLE IF NOT EXISTS rooms (
+CREATE TABLE rooms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     owner_id INT NOT NULL,
-    title VARCHAR(150) NOT NULL,
-    location VARCHAR(150) NOT NULL,
+    category ENUM('room','office','electronics','vehicle') NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    description TEXT,
-    status ENUM('pending','approved') DEFAULT 'pending',
+    description TEXT NOT NULL,
+    image VARCHAR(255),
+    status ENUM('pending','approved','rejected') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- BOOKINGS TABLE
-CREATE TABLE IF NOT EXISTS bookings (
+CREATE TABLE bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     room_id INT NOT NULL,
     tenant_id INT NOT NULL,
@@ -37,3 +36,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
     FOREIGN KEY (tenant_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- Default admin user
+INSERT INTO users (name, email, password, role)
+VALUES ('Admin', 'admin@rentease.com', MD5('admin123'), 'admin');
