@@ -1,0 +1,15 @@
+# Database config
+config/db.php
+sql/rentease.sql
+
+# Uploads
+assets/uploads/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
